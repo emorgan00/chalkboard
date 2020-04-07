@@ -3,6 +3,12 @@
         "background": "#022500",
         "0": "#FFFCED",
         "1": "#B73838"
+    },
+
+    "controls": {
+
+        "quit": "^[",
+        "freedraw": "f"
     }
 
 }

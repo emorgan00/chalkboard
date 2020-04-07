@@ -2,8 +2,9 @@ import pygame
 import json
 from os import path
 
-import chalkboardlib.modes.mode
-import chalkboardlib.modes.basic
+import chalkboardlib.mode
+import chalkboardlib.modes.freedraw
+import chalkboardlib.globals as gb
 
 # temporary, perhaps
 DEFAULT_SIZE = (800, 500)
@@ -11,7 +12,7 @@ DEFAULT_SIZE = (800, 500)
 def run_configuration(config_path):
 
     with open(config_path, 'r') as f:
-        config_dict = json.load(f)
+        gb.CONFIG = json.load(f)
 
     pygame.init()
 
@@ -23,33 +24,21 @@ def run_configuration(config_path):
     pygame.display.set_icon(icon_surface)
 
     # create screen instance
-    screen = pygame.display.set_mode(DEFAULT_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+    gb.SCREEN = pygame.display.set_mode(DEFAULT_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
 
     # load default mode
-    objects = []
-    modes = [chalkboardlib.modes.basic.Basic(screen, objects, config_dict)]
-    modes[-1].load()
+    gb.MODES.append(chalkboardlib.modes.freedraw.FreeDrawMode())
 
-    while len(modes) > 0:
+    while len(gb.MODES) > 0:
 
         events = pygame.event.get()
         for ev in events:
+            if len(gb.MODES) > 0:
+                gb.MODES[-1].event(ev)
 
-            # handle top-level events outside of mode
-            if ev.type == pygame.VIDEORESIZE:
-                screen = pygame.display.set_mode(ev.dict['size'], pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+        if len(chalkboardlib.globals.MODES) > 0:
+            gb.MODES[-1].tick()
 
-            elif ev.type == pygame.QUIT:
-                for mode in modes:
-                    mode.kill()
-                break
-
-            else:
-                modes[-1].event(ev)
-
-        if len(modes) > 0:
-            modes[-1].tick()
-        while len(modes) > 0 and not modes[-1].active:
-            modes.pop()
+        pygame.display.flip()
 
     pygame.quit()
