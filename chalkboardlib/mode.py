@@ -1,5 +1,6 @@
 import pygame
 import chalkboardlib.globals as gb
+import chalkboardlib.object
 from chalkboardlib.util import key_string, parse_color
 
 class Mode:
@@ -29,7 +30,7 @@ class Mode:
             gb.SCREEN = pygame.display.set_mode(ev.dict["size"], pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
 
         elif ev.type == pygame.KEYDOWN:
-            s = key_string(ev.key)
+            s = key_string(ev)
 
             if s == gb.CONFIG["controls"]["quit"]:
                 self.kill()
@@ -54,12 +55,20 @@ class DrawMode(Mode):
         super().event(ev)
 
         if ev.type == pygame.KEYDOWN:
-            s = key_string(ev.key)
+            s = key_string(ev)
 
+            # color selection
             if s == "1":
                 gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
             if s == "2":
                 gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["2"])
+
+            # undo, redo
+            if s == gb.CONFIG["controls"]["undo"]:
+                chalkboardlib.object.undo()
+            if s == gb.CONFIG["controls"]["redo"]:
+                chalkboardlib.object.redo()
+
 
 # describes a Mode which is always at the outermost level
 class BaseDrawMode(DrawMode):

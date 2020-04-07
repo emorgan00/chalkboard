@@ -10,6 +10,9 @@ CONFIG = {}
 MODES = []
 OBJECTS = []
 
+UNDO_BUFFER = []
+REDO_BUFFER = []
+
 # draw settings
 ACTIVE_COLOR = (0, 0, 0)
 LINE_THICKNESS = 1

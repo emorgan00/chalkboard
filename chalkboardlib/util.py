@@ -46,20 +46,14 @@ KEY_STRING = {
     pygame.K_9: "9"
 }
 
-def key_string(key):
+def key_string(ev):
     out = ""
-    # if key & pygame.KMOD_CTRL:
-    #     out += "ctrl+"
-    #     key &= ~pygame.KMOD_CTRL
-    #     key &= ~pygame.KMOD_LCTRL
-    #     key &= ~pygame.KMOD_RCTRL
-    # if key & pygame.KMOD_SHIFT:
-    #     out += "shift+"
-    #     key &= ~pygame.KMOD_SHIFT
-    #     key &= ~pygame.KMOD_LSHIFT
-    #     key &= ~pygame.KMOD_RSHIFT
-    if key in KEY_STRING:
-        out += KEY_STRING[key]
+    if ev.mod & pygame.KMOD_CTRL:
+        out += "ctrl+"
+    if ev.mod & pygame.KMOD_SHIFT:
+        out += "shift+"
+    if ev.key in KEY_STRING:
+        out += KEY_STRING[ev.key]
     return out
 
 # accepts a string of format "#000000", returns a pygame-compatible color

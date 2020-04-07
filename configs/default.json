@@ -6,9 +6,11 @@
     },
 
     "controls": {
-
         "quit": "^[",
-        "freedraw": "f"
+        "freedraw": "q",
+        "undo": "ctrl+z",
+        "redo": "ctrl+shift+z",
+        "fullscreen": "f"
     },
 
     "default-line-thickness": 5

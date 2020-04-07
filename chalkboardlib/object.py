@@ -15,3 +15,30 @@ class ScreenObject:
 
     def draw(self):
         pass
+
+def add_object(obj):
+
+    gb.REDO_BUFFER.clear()
+    gb.OBJECTS.append(obj)
+    gb.UNDO_BUFFER.append(1)
+
+def add_objects(objs):
+
+    gb.REDO_BUFFER.clear()
+    for obj in objs:
+        gb.OBJECTS.append(obj)
+    gb.UNDO_BUFFER.append(len(objs))
+
+def undo():
+
+    if len(gb.UNDO_BUFFER) > 0:
+        gb.REDO_BUFFER.append([])
+        for _ in range(gb.UNDO_BUFFER.pop()):
+            gb.REDO_BUFFER[-1].append(gb.OBJECTS.pop())
+
+def redo():
+
+    if len(gb.REDO_BUFFER) > 0:
+        gb.UNDO_BUFFER.append(len(gb.REDO_BUFFER[-1]))
+        for obj in gb.REDO_BUFFER.pop():
+            gb.OBJECTS.append(obj)

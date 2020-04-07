@@ -29,9 +29,12 @@ def run_configuration(config_path):
     # create screen instance
     gb.SCREEN = pygame.display.set_mode(DEFAULT_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
 
+
     # load default mode
     gb.MODES.append(chalkboardlib.modes.freedraw.FreeDrawMode())
     gb.MODES[-1].load()
+    gb.OBJECTS = []
+    gb.UNDO_BUFFER = []
 
     while len(gb.MODES) > 0:
 

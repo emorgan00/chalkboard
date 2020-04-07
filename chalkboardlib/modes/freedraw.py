@@ -1,5 +1,6 @@
 import pygame
 import chalkboardlib.globals as gb
+import chalkboardlib.object
 from chalkboardlib.util import key_string, parse_color
 from chalkboardlib.mode import Mode, DrawMode, BaseDrawMode
 from chalkboardlib.objects.polyline import Polyline
@@ -34,5 +35,5 @@ class FreeDrawMode(BaseDrawMode):
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 1:
                 self.mouse_down = False
-                gb.OBJECTS.append(self.object_buffer)
+                chalkboardlib.object.add_object(self.object_buffer)
                 self.object_buffer = None
