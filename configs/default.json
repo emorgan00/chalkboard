@@ -1,14 +1,16 @@
 {
     "colors": {
         "background": "#022500",
-        "0": "#FFFCED",
-        "1": "#B73838"
+        "1": "#FFFCED",
+        "2": "#B73838"
     },
 
     "controls": {
 
         "quit": "^[",
         "freedraw": "f"
-    }
+    },
+
+    "default-line-thickness": 5
 
 }

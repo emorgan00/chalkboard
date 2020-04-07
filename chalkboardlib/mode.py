@@ -1,6 +1,6 @@
 import pygame
 import chalkboardlib.globals as gb
-from chalkboardlib.util import key_string
+from chalkboardlib.util import key_string, parse_color
 
 class Mode:
 
@@ -14,6 +14,10 @@ class Mode:
     # ask to spawn a new mode at end of tick
     def spawn(self, mode):
         gb.MODES.append(mode)
+        gb.MODES[-1].load()
+
+    def load(self):
+        pass
 
     def tick(self):
         pass
@@ -34,19 +38,37 @@ class Mode:
 
         elif ev.type == pygame.QUIT:
             # hacky solution, should be more robust
-            print("test")
-            import sys
-            sys.stdout.flush()
             gb.MODES.clear()
 
 # describes a Mode which supports basic interaction with the drawing environment
 class DrawMode(Mode):
 
+    def load(self):
+        super().load()
+        pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+
+    def tick(self):
+        super().tick()
+
     def event(self, ev):
         super().event(ev)
 
+        if ev.type == pygame.KEYDOWN:
+            s = key_string(ev.key)
+
+            if s == "1":
+                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
+            if s == "2":
+                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["2"])
+
 # describes a Mode which is always at the outermost level
 class BaseDrawMode(DrawMode):
+
+    def load(self):
+        super().load()
+
+    def tick(self):
+        super().tick()
 
     def event(self, ev):
         super().event(ev)

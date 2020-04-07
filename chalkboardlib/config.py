@@ -5,6 +5,7 @@ from os import path
 import chalkboardlib.mode
 import chalkboardlib.modes.freedraw
 import chalkboardlib.globals as gb
+from chalkboardlib.util import parse_color
 
 # temporary, perhaps
 DEFAULT_SIZE = (800, 500)
@@ -13,6 +14,8 @@ def run_configuration(config_path):
 
     with open(config_path, 'r') as f:
         gb.CONFIG = json.load(f)
+    gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
+    gb.LINE_THICKNESS = gb.CONFIG["default-line-thickness"]
 
     pygame.init()
 
@@ -28,6 +31,7 @@ def run_configuration(config_path):
 
     # load default mode
     gb.MODES.append(chalkboardlib.modes.freedraw.FreeDrawMode())
+    gb.MODES[-1].load()
 
     while len(gb.MODES) > 0:
 
