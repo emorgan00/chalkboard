@@ -13,6 +13,7 @@
         "fullscreen": "f"
     },
 
-    "default-line-thickness": 5
-
+    "default-line-thickness": 5,
+    "default-window-size": [800, 500],
+    "fullscreen-window-size": [3000, 2000]
 }

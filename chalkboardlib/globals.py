@@ -2,6 +2,8 @@ import pygame
 
 # the pygame screen surface
 SCREEN = None
+FULLSCREEN = False
+SCREEN_SIZE = (0, 0)
 
 # current configuration (e.g. configs/default.json)
 CONFIG = {}

@@ -7,7 +7,6 @@ from chalkboardlib.objects.polyline import Polyline
 
 class FreeDrawMode(BaseDrawMode):
 
-    mouse_down = False
     object_buffer = None
 
     def load(self):
@@ -20,7 +19,7 @@ class FreeDrawMode(BaseDrawMode):
         for obj in gb.OBJECTS:
             obj.draw()
 
-        if self.mouse_down:
+        if self.object_buffer is not None:
             self.object_buffer.insert(*pygame.mouse.get_pos())
             self.object_buffer.draw()
 
@@ -29,11 +28,9 @@ class FreeDrawMode(BaseDrawMode):
 
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
-                self.mouse_down = True
                 self.object_buffer = Polyline(*pygame.mouse.get_pos(), gb.ACTIVE_COLOR, gb.LINE_THICKNESS)
 
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 1:
-                self.mouse_down = False
                 chalkboardlib.object.add_object(self.object_buffer)
                 self.object_buffer = None

@@ -27,7 +27,8 @@ class Mode:
 
         # window-level events
         if ev.type == pygame.VIDEORESIZE:
-            gb.SCREEN = pygame.display.set_mode(ev.dict["size"], pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+            gb.SCREEN_SIZE = ev.dict["size"]
+            gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
 
         elif ev.type == pygame.KEYDOWN:
             s = key_string(ev)
@@ -36,6 +37,13 @@ class Mode:
                 self.kill()
                 if len(gb.MODES) > 0:
                     gb.MODES[-1].event(ev)
+
+            if s == gb.CONFIG["controls"]["fullscreen"]:
+                if gb.FULLSCREEN:
+                    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+                else:
+                    gb.SCREEN = pygame.display.set_mode(gb.CONFIG["fullscreen-window-size"], pygame.HWSURFACE | pygame.FULLSCREEN | pygame.DOUBLEBUF)
+                gb.FULLSCREEN = not gb.FULLSCREEN
 
         elif ev.type == pygame.QUIT:
             # hacky solution, should be more robust
@@ -68,7 +76,6 @@ class DrawMode(Mode):
                 chalkboardlib.object.undo()
             if s == gb.CONFIG["controls"]["redo"]:
                 chalkboardlib.object.redo()
-
 
 # describes a Mode which is always at the outermost level
 class BaseDrawMode(DrawMode):
