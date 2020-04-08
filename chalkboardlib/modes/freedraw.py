@@ -4,6 +4,7 @@ import chalkboardlib.object
 from chalkboardlib.util import key_string, parse_color
 from chalkboardlib.mode import Mode, DrawMode, BaseDrawMode
 from chalkboardlib.objects.polyline import Polyline
+from chalkboardlib.history import add_event, AddObjectsEvent
 
 class FreeDrawMode(BaseDrawMode):
 
@@ -14,10 +15,6 @@ class FreeDrawMode(BaseDrawMode):
 
     def tick(self):
         super().tick()
-
-        gb.SCREEN.fill(parse_color(gb.CONFIG["colors"]["background"]))
-        for obj in gb.OBJECTS:
-            obj.draw()
 
         if self.object_buffer is not None:
             self.object_buffer.insert(gb.MOUSE_X, gb.MOUSE_Y)
@@ -32,5 +29,5 @@ class FreeDrawMode(BaseDrawMode):
 
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 1:
-                chalkboardlib.object.add_object(self.object_buffer)
+                add_event(AddObjectsEvent([self.object_buffer]))
                 self.object_buffer = None

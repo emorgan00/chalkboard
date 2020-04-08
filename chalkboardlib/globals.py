@@ -11,7 +11,6 @@ CONFIG = {}
 # mode, object master lists
 MODES = []
 OBJECTS = []
-
 UNDO_BUFFER = []
 REDO_BUFFER = []
 
@@ -24,6 +23,6 @@ VIEW_X_OFFSET = 0.0
 VIEW_Y_OFFSET = 0.0
 VIEW_SCALE = 1.0
 
-# true mouse coordinates correcting for panning + scaling
+# true mouse coordinates after correcting for panning + scaling
 MOUSE_X = 0.0
 MOUSE_Y = 0.0

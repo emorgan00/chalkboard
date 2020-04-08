@@ -69,21 +69,6 @@ class DrawMode(Mode):
     def event(self, ev):
         super().event(ev)
 
-        if ev.type == pygame.KEYDOWN:
-            s = key_string(ev)
-
-            # color selection
-            if s == "1":
-                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
-            if s == "2":
-                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["2"])
-
-            # undo, redo
-            if s == gb.CONFIG["controls"]["undo"]:
-                chalkboardlib.object.undo()
-            if s == gb.CONFIG["controls"]["redo"]:
-                chalkboardlib.object.redo()
-
         # panning and zooming
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 2:
@@ -107,7 +92,7 @@ class DrawMode(Mode):
                 gb.VIEW_X_OFFSET += rx
                 gb.VIEW_Y_OFFSET += ry
 
-# describes a Mode which is always at the outermost level
+# describes a Mode whichs allows direct modification of the environment
 class BaseDrawMode(DrawMode):
 
     def load(self):
@@ -116,5 +101,24 @@ class BaseDrawMode(DrawMode):
     def tick(self):
         super().tick()
 
+        gb.SCREEN.fill(parse_color(gb.CONFIG["colors"]["background"]))
+        for obj in gb.OBJECTS:
+            obj.draw()
+
     def event(self, ev):
         super().event(ev)
+
+        if ev.type == pygame.KEYDOWN:
+            s = key_string(ev)
+
+            # color selection
+            if s == "1":
+                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
+            if s == "2":
+                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["2"])
+
+            # undo, redo
+            if s == gb.CONFIG["controls"]["undo"]:
+                chalkboardlib.history.undo()
+            if s == gb.CONFIG["controls"]["redo"]:
+                chalkboardlib.history.redo()
