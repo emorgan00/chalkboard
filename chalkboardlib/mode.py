@@ -60,7 +60,10 @@ class DrawMode(Mode):
 
     def load(self):
         super().load()
-        pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        if gb.CONFIG["show-cursor-by-default"]:
+            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        else:
+            pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
         self.scroll_down = False
 
     def tick(self):

@@ -22,6 +22,7 @@ class AddObjectsEvent(Event):
 
     def do(self):
         for obj in self.objects:
+            obj.refresh()
             gb.OBJECTS.append(obj)
 
     def undo(self):

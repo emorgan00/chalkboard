@@ -60,4 +60,4 @@ def key_string(ev):
 def parse_color(s):
     if len(s) != 7 or s[0] != "#":
         raise ValueError(f"Invalid color format: {repr(s)}")
-    return int(s[1:], 16)
+    return (int(s[1:3], 16), int(s[3:5], 16), int(s[5:7], 16))

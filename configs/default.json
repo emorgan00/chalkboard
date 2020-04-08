@@ -8,12 +8,19 @@
     "controls": {
         "quit": "^[",
         "freedraw": "q",
+        "erase": "e",
         "undo": "ctrl+z",
         "redo": "ctrl+shift+z",
         "fullscreen": "f"
     },
 
     "default-line-thickness": 5,
+    "show-cursor-by-default": false,
     "default-window-size": [800, 500],
-    "fullscreen-window-size": [1500, 1000]
+    "fullscreen-window-size": [1500, 1000],
+
+    "smooth-lines": {
+        "toggle": true,
+        "epsilon": 0.01
+    }
 }

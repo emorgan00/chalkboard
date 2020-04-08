@@ -12,3 +12,7 @@ class ScreenObject:
 
     def draw(self):
         pass
+
+    # called when this object is committed to the screen
+    def refresh(self):
+        pass
