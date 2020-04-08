@@ -20,7 +20,7 @@ class FreeDrawMode(BaseDrawMode):
             obj.draw()
 
         if self.object_buffer is not None:
-            self.object_buffer.insert(*pygame.mouse.get_pos())
+            self.object_buffer.insert(gb.MOUSE_X, gb.MOUSE_Y)
             self.object_buffer.draw()
 
     def event(self, ev):
@@ -28,7 +28,7 @@ class FreeDrawMode(BaseDrawMode):
 
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
-                self.object_buffer = Polyline(*pygame.mouse.get_pos(), gb.ACTIVE_COLOR, gb.LINE_THICKNESS)
+                self.object_buffer = Polyline(gb.MOUSE_X, gb.MOUSE_Y, gb.ACTIVE_COLOR, gb.LINE_THICKNESS)
 
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 1:

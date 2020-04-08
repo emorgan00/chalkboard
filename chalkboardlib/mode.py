@@ -21,7 +21,11 @@ class Mode:
         pass
 
     def tick(self):
-        pass
+        
+        # update mouse coordinates
+        mx, my = pygame.mouse.get_pos()
+        gb.MOUSE_X = (mx-gb.VIEW_X_OFFSET)/gb.VIEW_SCALE
+        gb.MOUSE_Y = (my-gb.VIEW_Y_OFFSET)/gb.VIEW_SCALE
 
     def event(self, ev):
 
@@ -52,9 +56,12 @@ class Mode:
 # describes a Mode which supports basic interaction with the drawing environment
 class DrawMode(Mode):
 
+    scroll_down = False
+
     def load(self):
         super().load()
         pygame.mouse.set_cursor(*pygame.cursors.broken_x)
+        self.scroll_down = False
 
     def tick(self):
         super().tick()
@@ -76,6 +83,29 @@ class DrawMode(Mode):
                 chalkboardlib.object.undo()
             if s == gb.CONFIG["controls"]["redo"]:
                 chalkboardlib.object.redo()
+
+        # panning and zooming
+        if ev.type == pygame.MOUSEBUTTONDOWN:
+            if ev.button == 2:
+                self.scroll_down = True
+            elif ev.button == 4:
+                gb.VIEW_X_OFFSET -= gb.MOUSE_X*gb.VIEW_SCALE*0.2
+                gb.VIEW_Y_OFFSET -= gb.MOUSE_Y*gb.VIEW_SCALE*0.2
+                gb.VIEW_SCALE *= 1.2
+            elif ev.button == 5:
+                gb.VIEW_SCALE /= 1.2
+                gb.VIEW_X_OFFSET += gb.MOUSE_X*gb.VIEW_SCALE*0.2
+                gb.VIEW_Y_OFFSET += gb.MOUSE_Y*gb.VIEW_SCALE*0.2
+
+        elif ev.type == pygame.MOUSEBUTTONUP:
+            if ev.button == 2:
+                self.scroll_down = False
+
+        elif ev.type == pygame.MOUSEMOTION:
+            if self.scroll_down:
+                rx, ry = ev.rel
+                gb.VIEW_X_OFFSET += rx
+                gb.VIEW_Y_OFFSET += ry
 
 # describes a Mode which is always at the outermost level
 class BaseDrawMode(DrawMode):

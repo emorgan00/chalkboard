@@ -22,4 +22,5 @@ class Polyline(ScreenObject):
         self.y2 = max(self.y2, y)
 
     def draw(self):
-        pygame.draw.lines(gb.SCREEN, self.color, False, self.points, self.thickness)
+        points_scaled = [(x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET) for x, y in self.points]
+        pygame.draw.lines(gb.SCREEN, self.color, False, points_scaled, max(1, int(self.thickness*gb.VIEW_SCALE)))
