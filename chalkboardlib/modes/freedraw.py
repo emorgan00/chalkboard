@@ -19,7 +19,9 @@ class FreeDrawMode(BaseDrawMode):
 
         if self.object_buffer is not None:
             self.object_buffer.insert(gb.MOUSE_X, gb.MOUSE_Y)
-            # self.object_buffer.reduce(0.007)
+            self.object_buffer.reduce(0.000000001)
+            if gb.CONFIG["smooth-lines"]["toggle"]:
+                self.object_buffer.smooth()
             self.object_buffer.draw()
 
         # brush size hint

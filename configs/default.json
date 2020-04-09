@@ -21,6 +21,6 @@
 
     "smooth-lines": {
         "toggle": true,
-        "epsilon": 0.01
+        "epsilon": 0.02
     }
 }
