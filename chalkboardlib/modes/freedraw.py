@@ -20,7 +20,7 @@ class FreeDrawMode(BaseDrawMode):
         if self.object_buffer is not None:
             self.object_buffer.insert(gb.MOUSE_X, gb.MOUSE_Y)
             self.object_buffer.reduce(0.000000001)
-            if gb.CONFIG["smooth-lines"]["toggle"]:
+            if gb.CONFIG["smooth-lines"]:
                 self.object_buffer.smooth()
             self.object_buffer.draw()
 
@@ -30,9 +30,10 @@ class FreeDrawMode(BaseDrawMode):
     def event(self, ev):
         super().event(ev)
 
+        # create / commit new lines
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
-                if gb.CONFIG["smooth-lines"]["toggle"]:
+                if gb.CONFIG["compress-lines"]:
                     self.object_buffer = SmoothPolyline(gb.MOUSE_X, gb.MOUSE_Y, gb.ACTIVE_COLOR, gb.LINE_THICKNESS)
                 else:
                     self.object_buffer = Polyline(gb.MOUSE_X, gb.MOUSE_Y, gb.ACTIVE_COLOR, gb.LINE_THICKNESS)

@@ -25,7 +25,8 @@ class Polyline(ScreenObject):
     def smooth(self):
 
         # shift recently drawn points closer together to avoid blockiness
-        for i in range(max(len(self.points)-5, 1), len(self.points)-1):
+        deg = gb.CONFIG["smooth-lines-degree"]
+        for i in range(max(len(self.points)-1-deg, 1), len(self.points)-1):
 
             x1, y1 = self.points[i-1][0], self.points[i-1][1]
             x2, y2 = self.points[i][0], self.points[i][1]
@@ -108,7 +109,7 @@ class SmoothPolyline(Polyline):
         super().insert(x, y)
 
     def refresh(self):
-        self.reduce(gb.CONFIG["smooth-lines"]["epsilon"])
+        self.reduce(gb.CONFIG["compress-lines-epsilon"])
 
     def draw(self):
 

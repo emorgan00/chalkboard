@@ -16,6 +16,9 @@ def run_configuration(config_path):
     gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
     gb.LINE_THICKNESS = gb.CONFIG["default-line-thickness"]
     gb.SCREEN_SIZE = gb.CONFIG["default-window-size"]
+    gb.SCREEN_MODE = pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF
+    if not gb.CONFIG["window-frame"]:
+        gb.SCREEN_MODE |= pygame.NOFRAME
 
     pygame.init()
     environ['SDL_VIDEO_CENTERED'] = '1'
@@ -28,7 +31,7 @@ def run_configuration(config_path):
     pygame.display.set_icon(icon_surface)
 
     # create screen instance
-    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
 
     # load default mode
     gb.MODES.append(chalkboardlib.modes.freedraw.FreeDrawMode())

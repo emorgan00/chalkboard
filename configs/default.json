@@ -1,26 +1,51 @@
 {
     "colors": {
-        "background": "#022500",
-        "1": "#FFFCED",
-        "2": "#B73838"
+        "background": "#FFFFFF",
+        "1": "#000000",
+        "2": "#0000AA",
+        "3": "#AA0000",
+        "4": "#00AA00",
+        "5": "#00AAAA",
+        "6": "#AA00AA",
+        "7": "#AAAA00",
+        "8": "#000000",
+        "9": "#000000",
+        "0": "#000000"
     },
 
     "controls": {
+
         "quit": "^[",
-        "freedraw": "q",
+        "fullscreen": "ctrl+f",
+
+        "freedraw": "f",
         "erase": "e",
+        "graph-theory": "g",
+
         "undo": "ctrl+z",
         "redo": "ctrl+shift+z",
-        "fullscreen": "f"
+
+        "color-1": "1",
+        "color-2": "2",
+        "color-3": "3",
+        "color-4": "4",
+        "color-5": "5",
+        "color-6": "6",
+        "color-7": "7",
+        "color-8": "8",
+        "color-9": "9",
+        "color-0": "0"
     },
+
+    "smooth-lines": true,
+    "smooth-lines-degree": 3,
+    "compress-lines": true,
+    "compress-lines-epsilon": 0.01,
 
     "default-line-thickness": 5,
     "show-cursor-by-default": false,
+
     "default-window-size": [800, 500],
     "fullscreen-window-size": [1500, 1000],
-
-    "smooth-lines": {
-        "toggle": true,
-        "epsilon": 0.02
-    }
+    "window-frame": true
 }

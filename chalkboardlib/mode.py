@@ -32,7 +32,7 @@ class Mode:
         # window-level events
         if ev.type == pygame.VIDEORESIZE:
             gb.SCREEN_SIZE = ev.dict["size"]
-            gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+            gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
 
         elif ev.type == pygame.KEYDOWN:
             s = key_string(ev)
@@ -44,7 +44,7 @@ class Mode:
 
             if s == gb.CONFIG["controls"]["fullscreen"]:
                 if gb.FULLSCREEN:
-                    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF)
+                    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
                 else:
                     gb.SCREEN = pygame.display.set_mode(gb.CONFIG["fullscreen-window-size"], pygame.HWSURFACE | pygame.FULLSCREEN | pygame.DOUBLEBUF)
                 gb.FULLSCREEN = not gb.FULLSCREEN
@@ -115,13 +115,13 @@ class BaseDrawMode(DrawMode):
             s = key_string(ev)
 
             # color selection
-            if s == "1":
-                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
-            if s == "2":
-                gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["2"])
+            for i in range(10):
+                if s == gb.CONFIG["controls"][f"color-{i}"]:
+                    gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"][str(i)])
+                    break
 
             # undo, redo
             if s == gb.CONFIG["controls"]["undo"]:
                 chalkboardlib.history.undo()
-            if s == gb.CONFIG["controls"]["redo"]:
+            elif s == gb.CONFIG["controls"]["redo"]:
                 chalkboardlib.history.redo()
