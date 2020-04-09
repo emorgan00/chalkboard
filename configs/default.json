@@ -1,5 +1,6 @@
 {
     "colors": {
+
         "background": "#FFFFFF",
         "1": "#000000",
         "2": "#0000AA",
@@ -40,7 +41,8 @@
     "smooth-lines": true,
     "smooth-lines-degree": 3,
     "compress-lines": true,
-    "compress-lines-epsilon": 0.01,
+    "compress-lines-epsilon": 0.04,
+    "fancy-lines": true,
 
     "default-line-thickness": 5,
     "show-cursor-by-default": false,

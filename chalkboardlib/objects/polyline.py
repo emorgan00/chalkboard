@@ -22,11 +22,10 @@ class Polyline(ScreenObject):
         self.x2 = max(self.x2, x+self.thickness)
         self.y2 = max(self.y2, y+self.thickness)
 
-    def smooth(self):
+    # smooth only the last n segments
+    def smooth_last(self, n):
 
-        # shift recently drawn points closer together to avoid blockiness
-        deg = gb.CONFIG["smooth-lines-degree"]
-        for i in range(max(len(self.points)-1-deg, 1), len(self.points)-1):
+        for i in range(max(len(self.points)-1-n, 1), len(self.points)-1):
 
             x1, y1 = self.points[i-1][0], self.points[i-1][1]
             x2, y2 = self.points[i][0], self.points[i][1]
@@ -45,10 +44,14 @@ class Polyline(ScreenObject):
             if dx*dx2+dy*dy2 > 0.2:
                 self.points[i] = ((x1+x2+x3)/3, (y1+y2+y3)/3)
 
-    # remove some points to make it draw faster
-    def reduce(self, epsilon):
+    # shift recently drawn points closer together to avoid blockiness
+    def smooth(self):
+        self.smooth_last(len(self.points)-1)
 
-        reduced_points = []
+    # run RDP reduction on only the last n segments
+    def reduce_last(self, epsilon, n):
+
+        reduced_points = self.points[:max(0, len(self.points)-1-n)]
 
         # RDP algorithm for removing redundant points
         def RDP_reduce(a, b):
@@ -67,7 +70,7 @@ class Polyline(ScreenObject):
                 h = hypot(y2-y1, x2-x1)
                 if h == 0:
                     continue
-                d = abs((y2-y1)*self.points[j][0]-(x2-x1)*self.points[j][1]+x2*y1-y2*x1) / h**2
+                d = abs((y2-y1)*self.points[j][0]-(x2-x1)*self.points[j][1]+x2*y1-y2*x1) / h
                 if d > dist:
                     i, dist = j, d
 
@@ -79,10 +82,18 @@ class Polyline(ScreenObject):
                 if len(reduced_points) == 0 or hypot(x-reduced_points[-1][0], y -reduced_points[-1][1]) > 0:
                     reduced_points.append(self.points[a])
 
-        RDP_reduce(0, len(self.points)-1)
+        RDP_reduce(max(0, len(self.points)-1-n), len(self.points)-1)
         reduced_points.append(self.points[-1])
 
         self.points = reduced_points
+
+    # remove some points to make it draw faster
+    def reduce(self, epsilon):
+        self.reduce_last(epsilon, len(self.points)-1)
+
+    def refresh(self):
+        if gb.CONFIG["compress-lines"]:
+            self.reduce(gb.CONFIG["compress-lines-epsilon"]*gb.VIEW_SCALE)
 
     def draw(self):
 
@@ -102,36 +113,32 @@ class Polyline(ScreenObject):
 # works identical to a polyline, but makes it look smoother (at cost of drawing time)
 class SmoothPolyline(Polyline):
 
+    polygons = None
+    circle_points = None
+
     def __init__(self, x, y, color, thickness):
         super().__init__(x, y, color, thickness)
+        self.update_polygon()
 
     def insert(self, x, y):
         super().insert(x, y)
+        self.update_polygon()
 
-    def refresh(self):
-        self.reduce(gb.CONFIG["compress-lines-epsilon"])
+    # create circle points + polygon points
+    def update_polygon(self):
 
-    def draw(self):
+        self.polygons = []
+        self.circle_points = []
+        width = self.thickness/2
 
-        width = int(self.thickness*gb.VIEW_SCALE/2)
-        if not self.onscreen() or width > min(gb.SCREEN.get_width(), gb.SCREEN.get_height()):
-            return
-
-        points_scaled = [(x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET) for x, y in self.points]
-
-        # circles at end points
-        if width > 0:
-            x, y = points_scaled[0][0], points_scaled[0][1]
-            pygame.gfxdraw.aacircle(gb.SCREEN, int(x), int(y), width, self.color)
-            pygame.gfxdraw.filled_circle(gb.SCREEN, int(x), int(y), width, self.color)
-            x, y = points_scaled[-1][0], points_scaled[-1][1]
-            pygame.gfxdraw.aacircle(gb.SCREEN, int(x), int(y), width, self.color)
-            pygame.gfxdraw.filled_circle(gb.SCREEN, int(x), int(y), width, self.color)
+        # start and end always get circles
+        self.circle_points.append(self.points[0])
+        self.circle_points.append(self.points[-1])
 
         # rectangles as segments
-        for i in range(len(points_scaled)-1):
+        for i in range(len(self.points)-1):
 
-            x1, y1, x2, y2 = *points_scaled[i], *points_scaled[i+1]
+            x1, y1, x2, y2 = *self.points[i], *self.points[i+1]
             dx, dy = x2-x1, y2-y1
             h = hypot(dx, dy)
             if h == 0:
@@ -140,8 +147,8 @@ class SmoothPolyline(Polyline):
 
             # fill in for gaps caused by rotated rectangle
             bx, by = x2-dy, y2+dx
-            if i < len(points_scaled)-2:
-                x3, y3 = points_scaled[i+2][0], points_scaled[i+2][1]
+            if i < len(self.points)-2:
+                x3, y3 = self.points[i+2][0], self.points[i+2][1]
                 dx2, dy2 = x3-x2, y3-y2
                 h2 = hypot(dx2, dy2)
                 if h2 != 0:
@@ -149,8 +156,7 @@ class SmoothPolyline(Polyline):
 
                     # extra circle for sharp turns
                     if width > 0 and (dx*dx2+dy*dy2)/width**2 < 0.2:
-                        pygame.gfxdraw.aacircle(gb.SCREEN, int(x2), int(y2), width, self.color)
-                        pygame.gfxdraw.filled_circle(gb.SCREEN, int(x2), int(y2), width, self.color)
+                        self.circle_points.append(self.points[i+1])
 
                     # check for rotate right vs. left
                     if dy*dx2 - dx*dy2 < 0:
@@ -158,7 +164,25 @@ class SmoothPolyline(Polyline):
                     else:
                         bx, by = x2-dy2, y2+dx2
 
-            polygon_points = ((x1+dy, y1-dx), (x1-dy, y1+dx), (x2-dy, y2+dx), (bx, by), (x2+dy, y2-dx))
+            self.polygons.append(((x1+dy, y1-dx), (x1-dy, y1+dx), (x2-dy, y2+dx), (bx, by), (x2+dy, y2-dx)))
 
-            pygame.gfxdraw.aapolygon(gb.SCREEN, polygon_points, self.color)
-            pygame.gfxdraw.filled_polygon(gb.SCREEN, polygon_points, self.color)
+    def refresh(self):
+        super().refresh()
+        self.update_polygon()
+
+    def draw(self):
+
+        width = int(self.thickness*gb.VIEW_SCALE/2)
+        if not self.onscreen() or width > min(gb.SCREEN.get_width(), gb.SCREEN.get_height()):
+            return
+
+        if width > 0:
+            for x, y in self.circle_points:
+                x, y = int(x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET), int(y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET)
+                pygame.gfxdraw.aacircle(gb.SCREEN, x, y, width, self.color)
+                pygame.gfxdraw.filled_circle(gb.SCREEN, x, y, width, self.color)
+
+        for poly in self.polygons:
+            scaled_points = [(x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET) for x, y in poly]
+            pygame.gfxdraw.aapolygon(gb.SCREEN, scaled_points, self.color)
+            pygame.gfxdraw.filled_polygon(gb.SCREEN, scaled_points, self.color)

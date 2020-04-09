@@ -18,10 +18,14 @@ class FreeDrawMode(BaseDrawMode):
         super().tick()
 
         if self.object_buffer is not None:
+
             self.object_buffer.insert(gb.MOUSE_X, gb.MOUSE_Y)
-            self.object_buffer.reduce(0.000000001)
+
+            # remove duplicate points (compress w/ epsilon = 0)
+            self.object_buffer.reduce_last(0.0, 10)
+
             if gb.CONFIG["smooth-lines"]:
-                self.object_buffer.smooth()
+                self.object_buffer.smooth_last(gb.CONFIG["smooth-lines-degree"])
             self.object_buffer.draw()
 
         # brush size hint
@@ -33,7 +37,7 @@ class FreeDrawMode(BaseDrawMode):
         # create / commit new lines
         if ev.type == pygame.MOUSEBUTTONDOWN:
             if ev.button == 1:
-                if gb.CONFIG["compress-lines"]:
+                if gb.CONFIG["fancy-lines"]:
                     self.object_buffer = SmoothPolyline(gb.MOUSE_X, gb.MOUSE_Y, gb.ACTIVE_COLOR, gb.LINE_THICKNESS)
                 else:
                     self.object_buffer = Polyline(gb.MOUSE_X, gb.MOUSE_Y, gb.ACTIVE_COLOR, gb.LINE_THICKNESS)
