@@ -1,7 +1,7 @@
 import pygame
 import chalkboardlib.globals as gb
 import chalkboardlib.object
-from chalkboardlib.util import key_string, parse_color
+from chalkboardlib.util import key_string, parse_color, load_configuration
 
 class Mode:
 
@@ -11,11 +11,6 @@ class Mode:
     # ask to destroy this mode at end of tick
     def kill(self):
         gb.MODES.pop()
-
-    # ask to spawn a new mode at end of tick
-    def spawn(self, mode):
-        gb.MODES.append(mode)
-        gb.MODES[-1].load()
 
     def load(self):
         pass
@@ -41,6 +36,9 @@ class Mode:
                 self.kill()
                 if len(gb.MODES) > 0:
                     gb.MODES[-1].event(ev)
+
+            elif s == gb.CONFIG["controls"]["reload-config"]:
+                load_configuration(gb.CONFIG_PATH)
 
             elif s == gb.CONFIG["controls"]["fullscreen"]:
                 if gb.FULLSCREEN:
@@ -76,13 +74,13 @@ class InteractMode(Mode):
             if ev.button == 2:
                 self.scroll_down = True
             elif ev.button == 4:
-                gb.VIEW_X_OFFSET -= gb.MOUSE_X*gb.VIEW_SCALE*0.2
-                gb.VIEW_Y_OFFSET -= gb.MOUSE_Y*gb.VIEW_SCALE*0.2
-                gb.VIEW_SCALE *= 1.2
+                gb.VIEW_X_OFFSET -= gb.MOUSE_X*gb.VIEW_SCALE*(gb.CONFIG["zoom-ratio"]-1.0)
+                gb.VIEW_Y_OFFSET -= gb.MOUSE_Y*gb.VIEW_SCALE*(gb.CONFIG["zoom-ratio"]-1.0)
+                gb.VIEW_SCALE *= gb.CONFIG["zoom-ratio"]
             elif ev.button == 5:
-                gb.VIEW_SCALE /= 1.2
-                gb.VIEW_X_OFFSET += gb.MOUSE_X*gb.VIEW_SCALE*0.2
-                gb.VIEW_Y_OFFSET += gb.MOUSE_Y*gb.VIEW_SCALE*0.2
+                gb.VIEW_SCALE /= gb.CONFIG["zoom-ratio"]
+                gb.VIEW_X_OFFSET += gb.MOUSE_X*gb.VIEW_SCALE*(gb.CONFIG["zoom-ratio"]-1.0)
+                gb.VIEW_Y_OFFSET += gb.MOUSE_Y*gb.VIEW_SCALE*(gb.CONFIG["zoom-ratio"]-1.0)
 
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 2:
@@ -121,9 +119,9 @@ class DrawMode(InteractMode):
 
             # size selection
             if s == gb.CONFIG["controls"]["increase-thickness"]:
-                gb.LINE_THICKNESS *= 1.2
+                gb.LINE_THICKNESS *= gb.CONFIG["zoom-ratio"]
             elif s == gb.CONFIG["controls"]["decrease-thickness"]:
-                gb.LINE_THICKNESS /= 1.2
+                gb.LINE_THICKNESS /= gb.CONFIG["zoom-ratio"]
 
             # undo, redo
             if s == gb.CONFIG["controls"]["undo"]:

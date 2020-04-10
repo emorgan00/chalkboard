@@ -7,6 +7,7 @@ SCREEN_SIZE = (0, 0)
 SCREEN_MODE = pygame.HWSURFACE | pygame.RESIZABLE | pygame.DOUBLEBUF
 
 # current configuration (e.g. configs/default.json)
+CONFIG_PATH = ""
 CONFIG = {}
 REGISTERED_MODES = {}
 

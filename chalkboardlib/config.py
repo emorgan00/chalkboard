@@ -1,10 +1,9 @@
 import pygame
-import commentjson
 from os import path, environ
 
 import chalkboardlib.mode
 import chalkboardlib.globals as gb
-from chalkboardlib.util import parse_color, key_string
+from chalkboardlib.util import parse_color, key_string, load_configuration
 
 # load all modes
 import chalkboardlib.modes.freedraw
@@ -12,8 +11,10 @@ import chalkboardlib.modes.erase
 
 def run_configuration(config_path):
 
-    with open(config_path, 'r') as f:
-        gb.CONFIG = commentjson.load(f)
+    pygame.init()
+    gb.CONFIG_PATH = config_path
+    load_configuration(config_path)
+    # environ['SDL_VIDEO_CENTERED'] = '1'
 
     # load various settings
     gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
@@ -23,8 +24,8 @@ def run_configuration(config_path):
     if not gb.CONFIG["window-frame"]:
         gb.SCREEN_MODE |= pygame.NOFRAME
 
-    pygame.init()
-    # environ['SDL_VIDEO_CENTERED'] = '1'
+    # create screen instance
+    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
 
     # configure window
     pygame.display.set_caption("Chalkboard")
@@ -32,9 +33,6 @@ def run_configuration(config_path):
     icon_path = path.join(path.dirname(__file__), "files/icon.png")
     icon_surface = pygame.image.load(icon_path)
     pygame.display.set_icon(icon_surface)
-
-    # create screen instance
-    gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
 
     # load default mode
     gb.MODES.append(gb.REGISTERED_MODES["freedraw"]())
@@ -54,4 +52,3 @@ def run_configuration(config_path):
         pygame.display.flip()
 
     pygame.quit()
-    print(gb.REGISTERED_MODES)

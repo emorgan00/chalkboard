@@ -1,5 +1,6 @@
 import pygame
 import chalkboardlib.globals as gb
+import commentjson
 
 def key_string(ev):
 
@@ -21,3 +22,9 @@ def parse_color(s):
 def onscreen(x1, y1, x2, y2):
     w, h = gb.SCREEN.get_width(), gb.SCREEN.get_height()
     return x1 < w and y1 < h and x2 > 0 and y2 > 0
+
+# this really shouldn't be in util... but it's convenient to have it here
+def load_configuration(config_path):
+
+    with open(config_path, 'r') as f:
+        gb.CONFIG = commentjson.load(f)

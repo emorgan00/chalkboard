@@ -18,7 +18,21 @@ def check_for_mode_switch(ev):
 
         for name in gb.REGISTERED_MODES:
             if s == gb.CONFIG["controls"][name]:
-                gb.MODES[-1].kill()
-                gb.MODES.append(gb.REGISTERED_MODES[name]())
-                print("switched to", name)
+                
+                if gb.CONFIG["revert-mode"]:
+                    if isinstance(gb.MODES[-1], gb.REGISTERED_MODES[name]) and len(gb.MODES) > 1:
+                        gb.MODES[-1].kill()
+                    else:
+                        gb.MODES.append(gb.REGISTERED_MODES[name]())
+                        gb.MODES[-1].load()
+
+                        # note: this could cause problems in the future
+                        if len(gb.MODES) > 50:
+                            gb.MODES.pop(0)
+
+                else:
+                    gb.MODES[-1].kill()
+                    gb.MODES.append(gb.REGISTERED_MODES[name]())
+                    gb.MODES[-1].load()
+
                 break

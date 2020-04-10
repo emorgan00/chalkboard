@@ -38,7 +38,11 @@
         "color-7": "7",
         "color-8": "8",
         "color-9": "9",
-        "color-0": "0"
+        "color-0": "0",
+
+        // note that if you switch colors and then reload the config file,
+        // things you have already drawn will remain the same color.
+        "reload-config": "ctrl+r"
     },
 
     // draw lines with circles + polygons rather than
@@ -54,15 +58,26 @@
     // compress lines as they are drawn (with RDP)
     // higher epsilon = more aggressive compression
     "compress-lines": true,
-    "compress-lines-epsilon": 0.25,
+    "compress-lines-epsilon": 0.12,
 
     // width in pixels when at default zoom level
     "default-line-thickness": 5,
+    "default-erase-thickness": 25,
 
+    // factor to multiply by when zooming in/out or
+    // changing line thickness. should be greater than 1.0
+    "zoom-ratio": 1.1,
+
+    // [width, height] in pixels
     "default-window-size": [800, 500],
     "fullscreen-window-size": [1500, 1000],
 
     // toggle pygame's NOFRAME option
     // (may not have an effect on all systems)
-    "window-frame": true
+    "window-frame": true,
+
+    // when set to true, pressing the hotkey for a mode you are already on
+    // will revert you back to the previous mode before the current one.
+    // when set to false, nothing will happen.
+    "revert-mode": true
 }

@@ -23,8 +23,8 @@ class FreeDrawMode(DrawMode):
 
             self.object_buffer.insert(gb.MOUSE_X, gb.MOUSE_Y)
 
-            # remove duplicate points (compress w/ epsilon = 0)
-            self.object_buffer.reduce_last(0.0, 10)
+            # remove duplicate points (compress w/ epsilon < 0)
+            self.object_buffer.reduce_last(-1.0, 10)
 
             if gb.CONFIG["smooth-lines"]:
                 self.object_buffer.smooth_last(gb.CONFIG["smooth-lines-degree"])
@@ -39,7 +39,6 @@ class FreeDrawMode(DrawMode):
         super().event(ev)
 
         if self.object_buffer is None:
-
             check_for_mode_switch(ev)
 
         # create / commit new lines
