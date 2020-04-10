@@ -42,7 +42,7 @@ class Mode:
                 if len(gb.MODES) > 0:
                     gb.MODES[-1].event(ev)
 
-            if s == gb.CONFIG["controls"]["fullscreen"]:
+            elif s == gb.CONFIG["controls"]["fullscreen"]:
                 if gb.FULLSCREEN:
                     gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
                 else:
@@ -60,10 +60,9 @@ class DrawMode(Mode):
 
     def load(self):
         super().load()
-        if gb.CONFIG["show-cursor-by-default"]:
-            pygame.mouse.set_cursor(*pygame.cursors.broken_x)
-        else:
-            pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
+
+        # invisible cursor
+        pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
         self.scroll_down = False
 
     def tick(self):
@@ -119,6 +118,12 @@ class BaseDrawMode(DrawMode):
                 if s == gb.CONFIG["controls"][f"color-{i}"]:
                     gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"][str(i)])
                     break
+
+            # size selection
+            if s == gb.CONFIG["controls"]["increase-thickness"]:
+                gb.LINE_THICKNESS *= 1.2
+            elif s == gb.CONFIG["controls"]["decrease-thickness"]:
+                gb.LINE_THICKNESS /= 1.2
 
             # undo, redo
             if s == gb.CONFIG["controls"]["undo"]:

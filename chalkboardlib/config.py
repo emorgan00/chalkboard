@@ -1,5 +1,5 @@
 import pygame
-import json
+import commentjson
 from os import path, environ
 
 import chalkboardlib.mode
@@ -10,7 +10,7 @@ from chalkboardlib.util import parse_color
 def run_configuration(config_path):
 
     with open(config_path, 'r') as f:
-        gb.CONFIG = json.load(f)
+        gb.CONFIG = commentjson.load(f)
 
     # load various settings
     gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"]["1"])
@@ -21,7 +21,7 @@ def run_configuration(config_path):
         gb.SCREEN_MODE |= pygame.NOFRAME
 
     pygame.init()
-    environ['SDL_VIDEO_CENTERED'] = '1'
+    # environ['SDL_VIDEO_CENTERED'] = '1'
 
     # configure window
     pygame.display.set_caption("Chalkboard")

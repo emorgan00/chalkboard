@@ -2,6 +2,7 @@
     "colors": {
 
         "background": "#FFFFFF",
+
         "1": "#000000",
         "2": "#0000AA",
         "3": "#AA0000",
@@ -16,7 +17,7 @@
 
     "controls": {
 
-        "quit": "^[",
+        "quit": "escape",
         "fullscreen": "ctrl+f",
 
         "freedraw": "f",
@@ -25,6 +26,9 @@
 
         "undo": "ctrl+z",
         "redo": "ctrl+shift+z",
+
+        "increase-thickness": "=",
+        "decrease-thickness": "-",
 
         "color-1": "1",
         "color-2": "2",
@@ -38,16 +42,28 @@
         "color-0": "0"
     },
 
-    "smooth-lines": true,
-    "smooth-lines-degree": 3,
-    "compress-lines": true,
-    "compress-lines-epsilon": 0.04,
+    // draw lines with circles + polygons rather than
+    // pygame's builtin line drawing function.
+    // if this is active, turn on line compression to avoid lag
     "fancy-lines": true,
 
+    // smooth out lines as they are drawn.
+    // higher degree = more smoothing
+    "smooth-lines": true,
+    "smooth-lines-degree": 3,
+
+    // compress lines as they are drawn (with RDP)
+    // higher epsilon = more aggressive compression
+    "compress-lines": true,
+    "compress-lines-epsilon": 0.25,
+
+    // width in pixels when at default zoom level
     "default-line-thickness": 5,
-    "show-cursor-by-default": false,
 
     "default-window-size": [800, 500],
     "fullscreen-window-size": [1500, 1000],
+
+    // toggle pygame's NOFRAME option
+    // (may not have an effect on all systems)
     "window-frame": true
 }

@@ -92,8 +92,9 @@ class Polyline(ScreenObject):
         self.reduce_last(epsilon, len(self.points)-1)
 
     def refresh(self):
+        print(gb.VIEW_SCALE, gb.LINE_THICKNESS)
         if gb.CONFIG["compress-lines"]:
-            self.reduce(gb.CONFIG["compress-lines-epsilon"]*gb.VIEW_SCALE)
+            self.reduce(gb.CONFIG["compress-lines-epsilon"]*gb.LINE_THICKNESS)
 
     def draw(self):
 
