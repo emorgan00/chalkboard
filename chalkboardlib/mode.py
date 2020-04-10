@@ -54,7 +54,7 @@ class Mode:
             gb.MODES.clear()
 
 # describes a Mode which supports basic interaction with the drawing environment
-class DrawMode(Mode):
+class InteractMode(Mode):
 
     scroll_down = False
 
@@ -94,8 +94,8 @@ class DrawMode(Mode):
                 gb.VIEW_X_OFFSET += rx
                 gb.VIEW_Y_OFFSET += ry
 
-# describes a Mode whichs allows direct modification of the environment
-class BaseDrawMode(DrawMode):
+# describes a Mode whichs allows direct modification of the environment through drawing
+class DrawMode(InteractMode):
 
     def load(self):
         super().load()

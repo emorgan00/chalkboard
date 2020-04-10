@@ -1,5 +1,6 @@
 import pygame
 import chalkboardlib.globals as gb
+from chalkboardlib.util import onscreen
 
 # describes a visual object that appears on screen
 class ScreenObject:
@@ -14,8 +15,7 @@ class ScreenObject:
     def onscreen(self):
         x1_s, y1_s = self.x1*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, self.y1*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET
         x2_s, y2_s = self.x2*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, self.y2*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET
-        w, h = gb.SCREEN.get_width(), gb.SCREEN.get_height()
-        return x1_s < w and y1_s < h and x2_s > 0 and y2_s > 0
+        return onscreen(x1_s, y1_s, x2_s, y2_s)
 
     def draw(self):
         pass

@@ -2,6 +2,7 @@ import pygame
 from math import hypot
 import chalkboardlib.globals as gb
 from chalkboardlib.object import ScreenObject
+from chalkboardlib.util import onscreen
 
 class Polyline(ScreenObject):
 
@@ -92,7 +93,6 @@ class Polyline(ScreenObject):
         self.reduce_last(epsilon, len(self.points)-1)
 
     def refresh(self):
-        print(gb.VIEW_SCALE, gb.LINE_THICKNESS)
         if gb.CONFIG["compress-lines"]:
             self.reduce(gb.CONFIG["compress-lines-epsilon"]*gb.LINE_THICKNESS)
 
@@ -180,10 +180,16 @@ class SmoothPolyline(Polyline):
         if width > 0:
             for x, y in self.circle_points:
                 x, y = int(x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET), int(y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET)
-                pygame.gfxdraw.aacircle(gb.SCREEN, x, y, width, self.color)
-                pygame.gfxdraw.filled_circle(gb.SCREEN, x, y, width, self.color)
+                if onscreen(x-width, y-width, x+width, y+width):
+                    pygame.gfxdraw.aacircle(gb.SCREEN, x, y, width, self.color)
+                    pygame.gfxdraw.filled_circle(gb.SCREEN, x, y, width, self.color)
 
         for poly in self.polygons:
             scaled_points = [(x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET) for x, y in poly]
-            pygame.gfxdraw.aapolygon(gb.SCREEN, scaled_points, self.color)
-            pygame.gfxdraw.filled_polygon(gb.SCREEN, scaled_points, self.color)
+            min_x = min(x for x, _ in scaled_points)-width
+            max_x = max(x for x, _ in scaled_points)+width
+            min_y = min(y for _, y in scaled_points)-width
+            max_y = max(y for _, y in scaled_points)+width
+            if onscreen(min_x, min_y, max_x, max_y):
+                pygame.gfxdraw.aapolygon(gb.SCREEN, scaled_points, self.color)
+                pygame.gfxdraw.filled_polygon(gb.SCREEN, scaled_points, self.color)

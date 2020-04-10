@@ -22,7 +22,6 @@
 
         "freedraw": "f",
         "erase": "e",
-        "graph-theory": "g",
 
         "undo": "ctrl+z",
         "redo": "ctrl+shift+z",

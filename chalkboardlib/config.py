@@ -3,9 +3,12 @@ import commentjson
 from os import path, environ
 
 import chalkboardlib.mode
-import chalkboardlib.modes.freedraw
 import chalkboardlib.globals as gb
-from chalkboardlib.util import parse_color
+from chalkboardlib.util import parse_color, key_string
+
+# load all modes
+import chalkboardlib.modes.freedraw
+import chalkboardlib.modes.erase
 
 def run_configuration(config_path):
 
@@ -34,7 +37,7 @@ def run_configuration(config_path):
     gb.SCREEN = pygame.display.set_mode(gb.SCREEN_SIZE, gb.SCREEN_MODE)
 
     # load default mode
-    gb.MODES.append(chalkboardlib.modes.freedraw.FreeDrawMode())
+    gb.MODES.append(gb.REGISTERED_MODES["freedraw"]())
     gb.MODES[-1].load()
     gb.OBJECTS, gb.UNDO_BUFFER, gb.REDO_BUFFER = [], [], []
 
@@ -51,3 +54,4 @@ def run_configuration(config_path):
         pygame.display.flip()
 
     pygame.quit()
+    print(gb.REGISTERED_MODES)
