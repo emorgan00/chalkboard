@@ -19,7 +19,6 @@ REDO_BUFFER = []
 
 # draw settings
 ACTIVE_COLOR = (0, 0, 0)
-LINE_THICKNESS = 1
 
 # view settings
 VIEW_X_OFFSET = 0.0

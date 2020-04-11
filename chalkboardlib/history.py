@@ -29,6 +29,61 @@ class AddObjectsEvent(Event):
         for _ in range(len(self.objects)):
             gb.OBJECTS.pop()
 
+class RemoveObjectsEvent(Event):
+
+    indices = None
+    objects = None
+
+    def __init__(self, inds):
+        self.indices = inds
+
+    # note: runs in O(n) time where n is
+    # the number of existing objects
+    def do(self):
+        new_objects, self.objects = [], []
+
+        i = 0
+        for j, obj in enumerate(gb.OBJECTS):
+            if i < len(self.indices) and j == self.indices[i]:
+                i += 1
+                self.objects.append(obj)
+            else:
+                new_objects.append(obj)
+
+        gb.OBJECTS = new_objects
+
+    # also O(n)
+    def undo(self):
+        new_objects = []
+
+        i = 0
+        for j, obj in enumerate(gb.OBJECTS):
+            while i < len(self.indices) and j == self.indices[i]:
+                new_objects.append(self.objects[i])
+                i += 1
+            new_objects.append(obj)
+
+        while i < len(self.objects):
+            new_objects.append(self.objects[i])
+            i += 1
+
+        gb.OBJECTS = new_objects
+
+class GroupedEvent(Event):
+
+    events = None
+
+    def __init__(self, events):
+        self.events = events
+
+    def do(self):
+        for ev in self.events:
+            ev.do()
+
+    def undo(self):
+        for ev in reversed(self.events):
+            ev.undo()
+
 def add_event(event):
 
     gb.REDO_BUFFER.clear()

@@ -111,6 +111,15 @@ class Polyline(ScreenObject):
             pygame.gfxdraw.aacircle(gb.SCREEN, int(x), int(y), width//2, self.color)
             pygame.gfxdraw.filled_circle(gb.SCREEN, int(x), int(y), width//2, self.color)
 
+    def erase(self, x, y, r):
+
+        flag = False
+        for px, py in self.points:
+            if hypot(px-x, py-y) < r:
+                flag = True
+
+        return [] if flag else None
+
 # works identical to a polyline, but makes it look smoother (at cost of drawing time)
 class SmoothPolyline(Polyline):
 
@@ -193,3 +202,6 @@ class SmoothPolyline(Polyline):
             if onscreen(min_x, min_y, max_x, max_y):
                 pygame.gfxdraw.aapolygon(gb.SCREEN, scaled_points, self.color)
                 pygame.gfxdraw.filled_polygon(gb.SCREEN, scaled_points, self.color)
+
+    def erase(self, x, y, r):
+        return super().erase(x, y, r)

@@ -35,4 +35,6 @@ def check_for_mode_switch(ev):
                     gb.MODES.append(gb.REGISTERED_MODES[name]())
                     gb.MODES[-1].load()
 
-                break
+                return True
+
+    return False

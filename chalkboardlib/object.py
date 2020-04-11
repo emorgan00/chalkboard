@@ -20,6 +20,12 @@ class ScreenObject:
     def draw(self):
         pass
 
+    # should return a list of new objects created by erasing this one.
+    # or, return None to indicate nothing happens.
+    # return an empty list to delete this object altogether.
+    def erase(self, x, y, r):
+        return None
+
     # called when this object is committed to the screen
     def refresh(self):
         pass

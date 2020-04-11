@@ -62,7 +62,7 @@
 
     // width in pixels when at default zoom level
     "default-line-thickness": 5,
-    "default-erase-thickness": 25,
+    "default-erase-thickness": 125,
 
     // factor to multiply by when zooming in/out or
     // changing line thickness. should be greater than 1.0
