@@ -33,12 +33,7 @@ class Mode:
         elif ev.type == pygame.KEYDOWN:
             s = key_string(ev)
 
-            if s == gb.CONFIG["controls"]["quit"]:
-                self.kill()
-                if len(gb.MODES) > 0:
-                    gb.MODES[-1].event(ev)
-
-            elif s == gb.CONFIG["controls"]["reload-config"]:
+            if s == gb.CONFIG["controls"]["reload-config"]:
                 load_configuration(gb.CONFIG_PATH)
 
             elif s == gb.CONFIG["controls"]["fullscreen"]:
@@ -49,8 +44,9 @@ class Mode:
                 gb.FULLSCREEN = not gb.FULLSCREEN
 
         elif ev.type == pygame.QUIT:
-            # hacky solution, should be more robust
-            gb.MODES.clear()
+            self.kill()
+            if len(gb.MODES) > 0:
+                gb.MODES[-1].event(ev)
 
 # describes a Mode which supports basic interaction with the drawing environment
 class InteractMode(Mode):
@@ -83,34 +79,3 @@ class InteractMode(Mode):
                 rx, ry = ev.rel
                 gb.VIEW_X_OFFSET += rx
                 gb.VIEW_Y_OFFSET += ry
-
-# describes a Mode whichs allows direct modification of the environment through drawing
-class DrawMode(InteractMode):
-
-    def load(self):
-        super().load()
-
-    def tick(self):
-        super().tick()
-
-        gb.SCREEN.fill(parse_color(gb.CONFIG["colors"]["background"]))
-        for obj in gb.OBJECTS:
-            obj.draw()
-
-    def event(self, ev):
-        super().event(ev)
-
-        if ev.type == pygame.KEYDOWN:
-            s = key_string(ev)
-
-            # color selection
-            for i in range(10):
-                if s == gb.CONFIG["controls"][f"color-{i}"]:
-                    gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"][str(i)])
-                    break
-
-            # undo, redo
-            if s == gb.CONFIG["controls"]["undo"]:
-                chalkboardlib.history.undo()
-            elif s == gb.CONFIG["controls"]["redo"]:
-                chalkboardlib.history.redo()

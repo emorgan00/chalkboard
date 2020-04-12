@@ -12,6 +12,12 @@ def key_string(ev):
     out += pygame.key.name(ev.key)
     return out
 
+# if this is a printable character, return it.
+# otherwise return an empty string
+def key_character(ev):
+
+    return ev.unicode
+
 # accepts a string of format "#000000", returns a pygame-compatible color
 def parse_color(s):
     if len(s) != 7 or s[0] != "#":

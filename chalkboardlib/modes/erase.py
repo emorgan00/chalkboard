@@ -76,9 +76,9 @@ class EraseMode(InteractMode):
             s = key_string(ev)
 
             # size selection
-            if s == gb.CONFIG["controls"]["increase-thickness"]:
+            if s == gb.CONFIG["controls"]["increase-size"]:
                 EraseMode.thickness *= gb.CONFIG["zoom-ratio"]
-            elif s == gb.CONFIG["controls"]["decrease-thickness"]:
+            elif s == gb.CONFIG["controls"]["decrease-size"]:
                 EraseMode.thickness /= gb.CONFIG["zoom-ratio"]
 
             # undoing while we are in the middle of an erase could

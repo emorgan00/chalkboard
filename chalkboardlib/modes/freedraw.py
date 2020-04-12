@@ -1,15 +1,14 @@
 import pygame
 import pygame.gfxdraw
 import chalkboardlib.globals as gb
-import chalkboardlib.object
 from chalkboardlib.util import key_string, parse_color
-from chalkboardlib.mode import DrawMode
+from chalkboardlib.mode import InteractMode
 from chalkboardlib.modes.control import register_mode, check_for_mode_switch
 from chalkboardlib.objects.polyline import Polyline, SmoothPolyline
-from chalkboardlib.history import add_event, AddObjectsEvent
+from chalkboardlib.history import *
 
 @register_mode("freedraw")
-class FreeDrawMode(DrawMode):
+class FreeDrawMode(InteractMode):
 
     thickness = None
     object_buffer = None
@@ -21,6 +20,10 @@ class FreeDrawMode(DrawMode):
 
     def tick(self):
         super().tick()
+
+        gb.SCREEN.fill(parse_color(gb.CONFIG["colors"]["background"]))
+        for obj in gb.OBJECTS:
+            obj.draw()
 
         if self.object_buffer is not None:
             self.object_buffer.draw()
@@ -64,7 +67,19 @@ class FreeDrawMode(DrawMode):
             s = key_string(ev)
 
             # size selection
-            if s == gb.CONFIG["controls"]["increase-thickness"]:
+            if s == gb.CONFIG["controls"]["increase-size"]:
                 FreeDrawMode.thickness *= gb.CONFIG["zoom-ratio"]
-            elif s == gb.CONFIG["controls"]["decrease-thickness"]:
+            elif s == gb.CONFIG["controls"]["decrease-size"]:
                 FreeDrawMode.thickness /= gb.CONFIG["zoom-ratio"]
+
+            # color selection
+            for i in range(10):
+                if s == gb.CONFIG["controls"][f"color-{i}"]:
+                    gb.ACTIVE_COLOR = parse_color(gb.CONFIG["colors"][str(i)])
+                    break
+
+            # undo, redo
+            if s == gb.CONFIG["controls"]["undo"]:
+                chalkboardlib.history.undo()
+            elif s == gb.CONFIG["controls"]["redo"]:
+                chalkboardlib.history.redo()

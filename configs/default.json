@@ -4,12 +4,12 @@
         "background": "#FFFFFF",
 
         "1": "#000000",
-        "2": "#0000AA",
-        "3": "#AA0000",
-        "4": "#00AA00",
-        "5": "#00AAAA",
-        "6": "#AA00AA",
-        "7": "#AAAA00",
+        "2": "#3B60FF",
+        "3": "#DB2424",
+        "4": "#15922D",
+        "5": "#0EC4B9",
+        "6": "#8B35A0",
+        "7": "#EB9110",
         "8": "#000000",
         "9": "#000000",
         "0": "#000000"
@@ -20,14 +20,17 @@
         "quit": "escape",
         "fullscreen": "ctrl+f",
 
+        // modes
         "freedraw": "f",
         "erase": "e",
+        "text": "t",
 
         "undo": "ctrl+z",
         "redo": "ctrl+shift+z",
 
-        "increase-thickness": "=",
-        "decrease-thickness": "-",
+        // change brush size, eraser size, text size, etc.
+        "increase-size": "=",
+        "decrease-size": "-",
 
         "color-1": "1",
         "color-2": "2",
@@ -42,7 +45,16 @@
 
         // note that if you switch colors and then reload the config file,
         // things you have already drawn will remain the same color.
-        "reload-config": "ctrl+r"
+        "reload-config": "ctrl+r",
+
+        // text mode specific options
+        // "toggle-bold": "ctrl+b",
+        // "toggle-italic": "ctrl+i",
+        // "toggle-underline": "ctrl+u",
+        "write-newline": "shift+return",
+        "commit-text": "return",
+        "discard-text": "escape"
+
     },
 
     // draw lines with circles + polygons rather than
@@ -79,5 +91,20 @@
     // when set to true, pressing the hotkey for a mode you are already on
     // will revert you back to the previous mode before the current one.
     // when set to false, nothing will happen.
-    "revert-mode": true
+    "revert-mode": true,
+
+    // text mode font options
+    "default-font-size": 24,
+
+    // if false, then font-name font will be chosen from system fonts
+    // this may not work on some systems, in which case you can set to
+    // true and specify a file in font-path
+    "custom-font": false,
+    "font-name": "consolas",
+    "font-path": "path/to/font.ttf",
+
+    // if true, then when you click to create a new text object, mouse
+    // input will then be ignored.
+    // if false, the new text object will continue to move around with the mouse.
+    "freeze-text": false
 }
