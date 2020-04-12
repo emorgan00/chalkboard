@@ -120,6 +120,11 @@ class Polyline(ScreenObject):
 
         return [] if flag else None
 
+    def translate(self, dx, dy):
+        super().translate(dx, dy)
+        for i in range(len(self.points)):
+            self.points[i] = (self.points[i][0]+dx, self.points[i][1]+dy)
+
 # works identical to a polyline, but makes it look smoother (at cost of drawing time)
 class SmoothPolyline(Polyline):
 
@@ -185,6 +190,9 @@ class SmoothPolyline(Polyline):
         width = int(self.thickness*gb.VIEW_SCALE/2)
         if not self.onscreen() or width > min(gb.SCREEN.get_width(), gb.SCREEN.get_height()):
             return
+
+        if gb.CONFIG["debug-mode"]:
+            self.debug()
 
         if width > 0:
             for x, y in self.circle_points:

@@ -55,7 +55,8 @@ class EraseMode(InteractMode):
 
         if self.active_objects is not None:
             indices = [i for i, x in enumerate(self.active_objects) if not x]
-            add_event(GroupedEvent([RemoveObjectsEvent(indices), AddObjectsEvent(self.object_buffer)]))
+            if len(indices) > 0 or len(self.object_buffer) > 0:
+                add_event(GroupedEvent([RemoveObjectsEvent(indices), AddObjectsEvent(self.object_buffer)]))
             self.object_buffer, self.active_objects = None, None
 
     def event(self, ev):

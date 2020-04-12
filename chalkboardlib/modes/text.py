@@ -36,11 +36,20 @@ class TextMode(InteractMode):
             if not gb.CONFIG["freeze-text"]:
                 dx = gb.MOUSE_X - self.object_buffer.x1
                 dy = gb.MOUSE_Y - self.object_buffer.y1
-                self.object_buffer.x1 += dx
-                self.object_buffer.x2 += dx
-                self.object_buffer.y1 += dy
-                self.object_buffer.y2 += dy
+                self.object_buffer.translate(dx, dy)
             self.object_buffer.draw()
+
+    def commit_text(self):
+
+        self.object_buffer.edit_mode = False
+
+        # remove empty lines
+        while len(self.object_buffer.text) > 0 and len(self.object_buffer.text[-1]) == 0:
+            self.object_buffer.text.pop()
+        if len(self.object_buffer.text) > 0:
+            add_event(AddObjectsEvent([self.object_buffer]))
+
+        self.object_buffer = None
 
     def event(self, ev):
         super().event(ev)
@@ -49,9 +58,12 @@ class TextMode(InteractMode):
             check_for_mode_switch(ev)
 
         if ev.type == pygame.MOUSEBUTTONUP:
-            if ev.button == 1 and self.object_buffer is None:
+            if ev.button == 1:
 
-                self.object_buffer = TextBox(gb.MOUSE_X, gb.MOUSE_Y, TextMode.font_size, gb.ACTIVE_COLOR)
+                if self.object_buffer is None:
+                    self.object_buffer = TextBox(gb.MOUSE_X, gb.MOUSE_Y, TextMode.font_size, gb.ACTIVE_COLOR)
+                else:
+                    self.commit_text()
 
         elif ev.type == pygame.KEYDOWN:
             s = key_string(ev)
@@ -86,15 +98,7 @@ class TextMode(InteractMode):
                     self.object_buffer.backspace()
 
                 elif s == gb.CONFIG["controls"]["commit-text"]:
-                    self.object_buffer.edit_mode = False
-
-                    # remove empty lines
-                    while len(self.object_buffer.text) > 0 and len(self.object_buffer.text[-1]) == 0:
-                        self.object_buffer.text.pop()
-                    if len(self.object_buffer.text) > 0:
-                        add_event(AddObjectsEvent([self.object_buffer]))
-
-                    self.object_buffer = None
+                    self.commit_text()
 
                 elif s == gb.CONFIG["controls"]["discard-text"]:
                     self.object_buffer = None

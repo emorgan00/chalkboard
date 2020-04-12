@@ -56,14 +56,20 @@ class TextBox(ScreenObject):
 
     def insert(self, char):
         self.text[-1] += char
-        width, height = TextBox.get_font_object(self.font_size).size(self.text[-1])
-        self.x2 = max(self.x2, self.x1+width)
-        self.y2 = max(self.y2, self.y1+height*len(self.text))
+        height = TextBox.get_font_object(self.font_size).size(self.text[-1])[1]
+        self.x2 = self.x1
+        for line in self.text:
+            width = TextBox.get_font_object(self.font_size).size(self.text[-1])[0]
+            self.x2 = max(self.x2, self.x1+width)
+        self.y2 = self.y1+height*len(self.text)
 
     def draw(self):
 
         if not self.onscreen():
             return
+
+        if gb.CONFIG["debug-mode"]:
+            self.debug()
 
         x_s, y_s = self.x1*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, self.y1*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET
 

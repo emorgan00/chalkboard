@@ -106,5 +106,8 @@
     // if true, then when you click to create a new text object, mouse
     // input will then be ignored.
     // if false, the new text object will continue to move around with the mouse.
-    "freeze-text": false
+    "freeze-text": false,
+
+    // show outlines of objects
+    "debug-mode": false
 }

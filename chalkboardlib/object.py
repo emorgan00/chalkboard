@@ -38,7 +38,7 @@ class ScreenObject:
             return d < r
         
         intersects = self.contains_point(x, y)
-        points = ((self.x1, self.y1), (self.x2, self.y1), (self.x2, self.y2), (self.x2, self.y1))
+        points = ((self.x1, self.y1), (self.x2, self.y1), (self.x2, self.y2), (self.x1, self.y2))
         for i in range(4):
             intersects = intersects or line_intersects(points[i], points[(i+1)%4])
 
@@ -47,3 +47,18 @@ class ScreenObject:
     # called when this object is committed to the screen
     def refresh(self):
         pass
+
+    def translate(self, dx, dy):
+        self.x1 += dx
+        self.x2 += dx
+        self.y1 += dy
+        self.y2 += dy
+
+    # called only when in debug mode
+    def debug(self):
+        x, y, w, h = self.x1, self.y1, self.x2-self.x1, self.y2-self.y1
+        x = x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET
+        y = y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET
+        w = w*gb.VIEW_SCALE
+        h = h*gb.VIEW_SCALE
+        pygame.draw.rect(gb.SCREEN, (255, 0, 0), pygame.Rect(x, y, w, h), 1)
