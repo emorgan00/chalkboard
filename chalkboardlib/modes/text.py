@@ -26,8 +26,8 @@ class TextMode(InteractMode):
             obj.draw()
 
         if self.object_buffer is None:
-            # temp
-            height = TextBox.get_font_object(self.font_size).get_height()
+
+            height = TextBox.get_font_object(self.font_size*gb.VIEW_SCALE).get_height()
             x, y = pygame.mouse.get_pos()
             if height < gb.SCREEN.get_width()+gb.SCREEN.get_height():
                 pygame.gfxdraw.vline(gb.SCREEN, x, y, y+height, gb.ACTIVE_COLOR)
@@ -102,6 +102,18 @@ class TextMode(InteractMode):
 
                 elif s == gb.CONFIG["controls"]["discard-text"]:
                     self.object_buffer = None
+
+                elif s == gb.CONFIG["controls"]["move-cursor-up"]:
+                    self.object_buffer.cursor_up()
+
+                elif s == gb.CONFIG["controls"]["move-cursor-down"]:
+                    self.object_buffer.cursor_down()
+
+                elif s == gb.CONFIG["controls"]["move-cursor-left"]:
+                    self.object_buffer.cursor_left()
+
+                elif s == gb.CONFIG["controls"]["move-cursor-right"]:
+                    self.object_buffer.cursor_right()
 
                 else:
                     self.object_buffer.insert(key_character(ev))

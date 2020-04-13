@@ -51,6 +51,10 @@
         // "toggle-bold": "ctrl+b",
         // "toggle-italic": "ctrl+i",
         // "toggle-underline": "ctrl+u",
+        "move-cursor-left": "left",
+        "move-cursor-right": "right",
+        "move-cursor-up": "up",
+        "move-cursor-down": "down",
         "write-newline": "shift+return",
         "commit-text": "return",
         "discard-text": "escape"
@@ -107,6 +111,12 @@
     // input will then be ignored.
     // if false, the new text object will continue to move around with the mouse.
     "freeze-text": false,
+
+    // if true, text will be smooth-scaled when zooming in and out
+    "smooth-scale-text": true,
+
+    // only scale text shorter than threshold (int pixels)
+    "smooth-scale-text-threshold": 10000000,
 
     // show outlines of objects
     "debug-mode": false
