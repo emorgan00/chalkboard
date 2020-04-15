@@ -119,5 +119,8 @@
     "smooth-scale-text-threshold": 10000000,
 
     // show outlines of objects
-    "debug-mode": false
+    "debug-mode": false,
+
+    // maximum frames per second
+    "fps-cap": 300
 }

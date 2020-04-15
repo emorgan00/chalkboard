@@ -40,6 +40,7 @@ def run_configuration(config_path):
     gb.MODES[-1].load()
     gb.OBJECTS, gb.UNDO_BUFFER, gb.REDO_BUFFER = [], [], []
 
+    clock = pygame.time.Clock()
     while len(gb.MODES) > 0:
 
         events = pygame.event.get()
@@ -50,6 +51,8 @@ def run_configuration(config_path):
         if len(chalkboardlib.globals.MODES) > 0:
             gb.MODES[-1].tick()
 
-        pygame.display.flip()
+        if pygame.display.get_active():
+            pygame.display.flip()
+        clock.tick(gb.CONFIG["fps-cap"])
 
     pygame.quit()
