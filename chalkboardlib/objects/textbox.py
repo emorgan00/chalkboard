@@ -129,7 +129,6 @@ class TextBox(ScreenObject):
                 elapsed_time = int((time.time_ns()-self.create_time)/300000000)
                 if elapsed_time%2 == 0:
                     
-                    print(self.cursor_pos)
                     subline = self.text[self.cursor_pos[0]][:self.cursor_pos[1]]
                     cursor_x, cursor_y = None, height*self.cursor_pos[0]
 

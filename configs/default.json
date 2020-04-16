@@ -24,6 +24,7 @@
         "freedraw": "f",
         "erase": "e",
         "text": "t",
+        "move": "m",
 
         "undo": "ctrl+z",
         "redo": "ctrl+shift+z",
@@ -48,9 +49,6 @@
         "reload-config": "ctrl+r",
 
         // text mode specific options
-        // "toggle-bold": "ctrl+b",
-        // "toggle-italic": "ctrl+i",
-        // "toggle-underline": "ctrl+u",
         "move-cursor-left": "left",
         "move-cursor-right": "right",
         "move-cursor-up": "up",
@@ -58,7 +56,6 @@
         "write-newline": "shift+return",
         "commit-text": "return",
         "discard-text": "escape"
-
     },
 
     // draw lines with circles + polygons rather than

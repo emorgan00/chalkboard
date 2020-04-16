@@ -44,6 +44,10 @@ class ScreenObject:
 
         return [] if intersects else None
 
+    # return true if this object intersects the given rectangle
+    def intersects(self, x1, y1, x2, y2):
+        return self.x1 <= x2 and self.x2 >= x1 and self.y1 <= y2 and self.y2 >= y1
+
     # called when this object is committed to the screen
     def refresh(self):
         pass
