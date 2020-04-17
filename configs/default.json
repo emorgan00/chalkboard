@@ -2,6 +2,8 @@
     "colors": {
 
         "background": "#FFFFFF",
+        "cursor": "#000000",
+        "highlight": "#FF0000",
 
         "1": "#000000",
         "2": "#3B60FF",
@@ -55,7 +57,14 @@
         "move-cursor-down": "down",
         "write-newline": "shift+return",
         "commit-text": "return",
-        "discard-text": "escape"
+        "discard-text": "escape",
+
+        // removes the current selection
+        "discard-selection": "escape",
+
+        // removes the current selection,
+        // and erases all of the selected objects
+        "delete-selection": "delete"
     },
 
     // draw lines with circles + polygons rather than
@@ -80,6 +89,9 @@
     // factor to multiply by when zooming in/out or
     // changing line thickness. should be greater than 1.0
     "zoom-ratio": 1.1,
+
+    // changes the size of the cursor in various modes
+    "cursor-size": 12,
 
     // [width, height] in pixels
     "default-window-size": [800, 500],

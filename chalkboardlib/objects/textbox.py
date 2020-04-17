@@ -117,7 +117,7 @@ class TextBox(ScreenObject):
             return
 
         if gb.CONFIG["debug-mode"]:
-            self.debug()
+            self.highlight()
 
         x_s, y_s = self.x1*gb.VIEW_SCALE+gb.VIEW_X_OFFSET, self.y1*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET
 

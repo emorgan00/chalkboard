@@ -32,10 +32,11 @@ class SelectMode(InteractMode):
         or SelectMode.selection_mode == 2 and not SelectMode.in_window(gb.MOUSE_X, gb.MOUSE_Y):
 
             x, y = pygame.mouse.get_pos()
-            height = 15
+            height = gb.CONFIG["cursor-size"]
+            color = parse_color(gb.CONFIG["colors"]["cursor"])
             if height < gb.SCREEN.get_width()+gb.SCREEN.get_height():
-                pygame.gfxdraw.vline(gb.SCREEN, x, y-height, y+height, gb.ACTIVE_COLOR)
-                pygame.gfxdraw.hline(gb.SCREEN, x-height, x+height, y, gb.ACTIVE_COLOR)
+                pygame.gfxdraw.vline(gb.SCREEN, x, y-height, y+height, color)
+                pygame.gfxdraw.hline(gb.SCREEN, x-height, x+height, y, color)
 
         if SelectMode.selection_mode == 1:
 
@@ -55,28 +56,29 @@ class SelectMode(InteractMode):
         x1, x2, x3 = (z*gb.VIEW_SCALE+gb.VIEW_X_OFFSET for z in (x1, x2, x3))
         y1, y2, y3 = (z*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET for z in (y1, y2, y3))
         p1, p2 = (x3, y3), (x1+x2-x3, y1+y2-y3)
-        height = 15
+        height = gb.CONFIG["cursor-size"]
+        color = parse_color(gb.CONFIG["colors"]["cursor"])
 
         if height < gb.SCREEN.get_width()+gb.SCREEN.get_height():
 
             x, y = map(int, min(p1, p2))
-            pygame.gfxdraw.hline(gb.SCREEN, x, x+height, y, gb.ACTIVE_COLOR)
+            pygame.gfxdraw.hline(gb.SCREEN, x, x+height, y, color)
             x, y = map(int, max(p1, p2))
-            pygame.gfxdraw.hline(gb.SCREEN, x-height, x, y, gb.ACTIVE_COLOR)
+            pygame.gfxdraw.hline(gb.SCREEN, x-height, x, y, color)
             y, x = map(int, min(p1[::-1], p2[::-1]))
-            pygame.gfxdraw.vline(gb.SCREEN, x, y, y+height, gb.ACTIVE_COLOR)
+            pygame.gfxdraw.vline(gb.SCREEN, x, y, y+height, color)
             y, x = map(int, max(p1[::-1], p2[::-1]))
-            pygame.gfxdraw.vline(gb.SCREEN, x, y-height, y, gb.ACTIVE_COLOR)
+            pygame.gfxdraw.vline(gb.SCREEN, x, y-height, y, color)
 
         if SelectMode.selection_mode == 1:
             for obj in gb.OBJECTS:
                 if obj.intersects(*SelectMode.selection_window):
-                    obj.debug()
+                    obj.highlight()
         else:
             for i in range(len(SelectMode.index_buffer)):
                 j, obj = SelectMode.index_buffer[i], SelectMode.object_buffer[i]
                 if j < len(gb.OBJECTS) and gb.OBJECTS[j] == obj:
-                    obj.debug()
+                    obj.highlight()
 
     def in_window(x, y):
         x1, y1, x2, y2 = SelectMode.selection_window
@@ -123,5 +125,10 @@ class SelectMode(InteractMode):
                     chalkboardlib.history.redo()
 
             if SelectMode.selection_mode == 2:
-                if s == gb.CONFIG["controls"]["quit"]:
+                if s == gb.CONFIG["controls"]["discard-selection"]:
+                    SelectMode.selection_mode = 0
+
+                elif s == gb.CONFIG["controls"]["delete-selection"]:
+
+                    add_event(RemoveObjectsEvent(SelectMode.index_buffer))
                     SelectMode.selection_mode = 0

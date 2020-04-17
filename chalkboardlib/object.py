@@ -1,7 +1,7 @@
 import pygame
 from math import hypot
 import chalkboardlib.globals as gb
-from chalkboardlib.util import onscreen
+from chalkboardlib.util import onscreen, parse_color
 
 # describes a visual object that appears on screen
 class ScreenObject:
@@ -59,10 +59,10 @@ class ScreenObject:
         self.y2 += dy
 
     # called only when in debug mode
-    def debug(self):
+    def highlight(self):
         x, y, w, h = self.x1, self.y1, self.x2-self.x1, self.y2-self.y1
         x = x*gb.VIEW_SCALE+gb.VIEW_X_OFFSET
         y = y*gb.VIEW_SCALE+gb.VIEW_Y_OFFSET
         w = w*gb.VIEW_SCALE
         h = h*gb.VIEW_SCALE
-        pygame.draw.rect(gb.SCREEN, (255, 0, 0), pygame.Rect(x, y, w, h), 1)
+        pygame.draw.rect(gb.SCREEN, parse_color(gb.CONFIG["colors"]["highlight"]), pygame.Rect(x, y, w, h), 1)

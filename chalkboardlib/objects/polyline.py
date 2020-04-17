@@ -192,7 +192,7 @@ class SmoothPolyline(Polyline):
             return
 
         if gb.CONFIG["debug-mode"]:
-            self.debug()
+            self.highlight()
 
         if width > 0:
             for x, y in self.circle_points:
@@ -213,3 +213,12 @@ class SmoothPolyline(Polyline):
 
     def erase(self, x, y, r):
         return super().erase(x, y, r)
+
+    def translate(self, dx, dy):
+        super().translate(dx, dy)
+
+        for i in range(len(self.circle_points)):
+            self.circle_points[i] = (self.circle_points[i][0]+dx, self.circle_points[i][1]+dy)
+
+        for i in range(len(self.polygons)):
+            self.polygons[i] = tuple((x+dx, y+dy) for x, y in self.polygons[i])
