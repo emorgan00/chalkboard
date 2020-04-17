@@ -6,13 +6,14 @@ from chalkboardlib.mode import InteractMode
 from chalkboardlib.modes.control import register_mode, check_for_mode_switch
 from chalkboardlib.history import *
 
-@register_mode("move")
 class SelectMode(InteractMode):
 
+    object_buffer = None
     index_buffer = None
-    selection_mode = 0
     selection_window = (0, 0, 0, 0)
     selection_anchor = (0, 0)
+    
+    selection_mode = 0
     # 0: no selection
     # 1: currently selecting
     # 2: active selection
@@ -27,7 +28,8 @@ class SelectMode(InteractMode):
         for obj in gb.OBJECTS:
             obj.draw()
 
-        if SelectMode.selection_mode in (0, 2):
+        if SelectMode.selection_mode == 0 \
+        or SelectMode.selection_mode == 2 and not SelectMode.in_window(gb.MOUSE_X, gb.MOUSE_Y):
 
             x, y = pygame.mouse.get_pos()
             height = 15
@@ -66,9 +68,15 @@ class SelectMode(InteractMode):
             y, x = map(int, max(p1[::-1], p2[::-1]))
             pygame.gfxdraw.vline(gb.SCREEN, x, y-height, y, gb.ACTIVE_COLOR)
 
-        for obj in gb.OBJECTS:
-            if obj.intersects(*SelectMode.selection_window):
-                obj.debug()
+        if SelectMode.selection_mode == 1:
+            for obj in gb.OBJECTS:
+                if obj.intersects(*SelectMode.selection_window):
+                    obj.debug()
+        else:
+            for i in range(len(SelectMode.index_buffer)):
+                j, obj = SelectMode.index_buffer[i], SelectMode.object_buffer[i]
+                if j < len(gb.OBJECTS) and gb.OBJECTS[j] == obj:
+                    obj.debug()
 
     def in_window(x, y):
         x1, y1, x2, y2 = SelectMode.selection_window
@@ -97,10 +105,12 @@ class SelectMode(InteractMode):
                 if SelectMode.selection_mode == 1:
 
                     SelectMode.selection_mode = 2
+                    SelectMode.object_buffer = []
                     SelectMode.index_buffer = []
-                    for j, obj in enumerate(gb.OBJECTS):
+                    for i, obj in enumerate(gb.OBJECTS):
                         if obj.intersects(*SelectMode.selection_window):
-                            SelectMode.index_buffer.append(j)
+                            SelectMode.object_buffer.append(obj)
+                            SelectMode.index_buffer.append(i)
 
         elif ev.type == pygame.KEYDOWN:
             s = key_string(ev)

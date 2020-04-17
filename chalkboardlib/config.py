@@ -9,7 +9,7 @@ from chalkboardlib.util import parse_color, key_string, load_configuration
 import chalkboardlib.modes.freedraw
 import chalkboardlib.modes.erase
 import chalkboardlib.modes.text
-import chalkboardlib.modes.select
+import chalkboardlib.modes.move
 
 def run_configuration(config_path):
 
