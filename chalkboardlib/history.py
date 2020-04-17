@@ -69,6 +69,25 @@ class RemoveObjectsEvent(Event):
 
         gb.OBJECTS = new_objects
 
+class MoveObjectsEvent(Event):
+
+    indices = None
+    dx, dy = 0, 0
+
+    def __init__(self, inds, dx, dy):
+        self.indices = inds
+        self.dx, self.dy = dx, dy
+
+    def do(self):
+        for i in self.indices:
+            if i < len(gb.OBJECTS):
+                gb.OBJECTS[i].translate(self.dx, self.dy)
+
+    def undo(self):
+        for i in self.indices:
+            if i < len(gb.OBJECTS):
+                gb.OBJECTS[i].translate(-self.dx, -self.dy)
+
 class GroupedEvent(Event):
 
     events = None

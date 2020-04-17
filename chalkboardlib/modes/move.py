@@ -10,6 +10,7 @@ from chalkboardlib.history import *
 class MoveMode(SelectMode):
 
     moving = False
+    motion_anchor = (0, 0)
 
     def load(self):
         super().load()
@@ -42,6 +43,13 @@ class MoveMode(SelectMode):
                     pygame.gfxdraw.hline(gb.SCREEN, x-h, x-sh, y+h, color)
                     pygame.gfxdraw.hline(gb.SCREEN, x+sh, x+h, y+h, color)
 
+    def translate_objects(dx, dy):
+
+        for i in range(len(SelectMode.index_buffer)):
+            j, obj = SelectMode.index_buffer[i], SelectMode.object_buffer[i]
+            if j < len(gb.OBJECTS) and gb.OBJECTS[j] == obj:
+                obj.translate(dx, dy)
+
     def event(self, ev):
         super().event(ev)
 
@@ -50,21 +58,21 @@ class MoveMode(SelectMode):
                 if SelectMode.selection_mode == 2:
                     if SelectMode.in_window(gb.MOUSE_X, gb.MOUSE_Y):
                         self.moving = True
+                        self.motion_anchor = (gb.MOUSE_X, gb.MOUSE_Y)
 
         elif ev.type == pygame.MOUSEBUTTONUP:
             if ev.button == 1:
-                self.moving = False
+                if self.moving:
+                    self.moving = False
+                    dx, dy = gb.MOUSE_X-self.motion_anchor[0], gb.MOUSE_Y-self.motion_anchor[1]
+                    MoveMode.translate_objects(-dx, -dy)
+                    add_event(MoveObjectsEvent(SelectMode.index_buffer, dx, dy))
 
         elif ev.type == pygame.MOUSEMOTION:
             if SelectMode.selection_mode == 2 and self.moving:
 
                 dx, dy = ev.rel[0]/gb.VIEW_SCALE, ev.rel[1]/gb.VIEW_SCALE
-
-                for i in range(len(SelectMode.index_buffer)):
-                    j, obj = SelectMode.index_buffer[i], SelectMode.object_buffer[i]
-                    if j < len(gb.OBJECTS) and gb.OBJECTS[j] == obj:
-
-                        obj.translate(dx, dy)
+                MoveMode.translate_objects(dx, dy)
 
                 x1, y1, x2, y2 = SelectMode.selection_window
                 x3, y3 = SelectMode.selection_anchor
