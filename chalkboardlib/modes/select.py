@@ -1,5 +1,6 @@
 import pygame
 import pygame.gfxdraw
+from copy import deepcopy
 import chalkboardlib.globals as gb
 from chalkboardlib.util import key_string, parse_color
 from chalkboardlib.mode import InteractMode
@@ -119,16 +120,20 @@ class SelectMode(InteractMode):
 
             # undo, redo
             if SelectMode.selection_mode != 1:
+
                 if s == gb.CONFIG["controls"]["undo"]:
                     chalkboardlib.history.undo()
                 elif s == gb.CONFIG["controls"]["redo"]:
                     chalkboardlib.history.redo()
 
             if SelectMode.selection_mode == 2:
+
                 if s == gb.CONFIG["controls"]["discard-selection"]:
                     SelectMode.selection_mode = 0
-
                 elif s == gb.CONFIG["controls"]["delete-selection"]:
-
                     add_event(RemoveObjectsEvent(SelectMode.index_buffer))
                     SelectMode.selection_mode = 0
+                elif s == gb.CONFIG["controls"]["paste-selection"]:
+                    add_event(AddObjectsEvent([
+                        deepcopy(obj) for obj in self.object_buffer
+                    ]))

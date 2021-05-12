@@ -59,6 +59,8 @@
         "commit-text": "return",
         "discard-text": "escape",
 
+        // duplicates the contents of the selection
+        "paste-selection": "v",
         // removes the current selection
         "discard-selection": "escape",
 
