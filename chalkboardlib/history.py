@@ -31,62 +31,41 @@ class AddObjectsEvent(Event):
 
 class RemoveObjectsEvent(Event):
 
-    indices = None
     objects = None
 
     def __init__(self, inds):
-        self.indices = inds
+        self.objects = [gb.OBJECTS[i] for i in inds]
 
     # note: runs in O(n) time where n is
     # the number of existing objects
     def do(self):
-        new_objects, self.objects = [], []
+        s = set(id(x) for x in self.objects)
+        gb.OBJECTS = [obj for obj in gb.OBJECTS if id(obj) not in s]
 
-        i = 0
-        for j, obj in enumerate(gb.OBJECTS):
-            if i < len(self.indices) and j == self.indices[i]:
-                i += 1
-                self.objects.append(obj)
-            else:
-                new_objects.append(obj)
-
-        gb.OBJECTS = new_objects
-
-    # also O(n)
     def undo(self):
-        new_objects = []
-
-        i = 0
-        for j, obj in enumerate(gb.OBJECTS):
-            while i < len(self.indices) and j == self.indices[i]:
-                new_objects.append(self.objects[i])
-                i += 1
-            new_objects.append(obj)
-
-        while i < len(self.objects):
-            new_objects.append(self.objects[i])
-            i += 1
-
-        gb.OBJECTS = new_objects
+        for obj in self.objects:
+            gb.OBJECTS.append(obj)
 
 class MoveObjectsEvent(Event):
 
-    indices = None
+    objects = None
     dx, dy = 0, 0
 
     def __init__(self, inds, dx, dy):
-        self.indices = inds
+        self.objects = [gb.OBJECTS[i] for i in inds]
         self.dx, self.dy = dx, dy
 
     def do(self):
-        for i in self.indices:
-            if i < len(gb.OBJECTS):
-                gb.OBJECTS[i].translate(self.dx, self.dy)
+        s = set(id(x) for x in self.objects)
+        for obj in gb.OBJECTS:
+            if id(obj) in s:
+                obj.translate(self.dx, self.dy)
 
     def undo(self):
-        for i in self.indices:
-            if i < len(gb.OBJECTS):
-                gb.OBJECTS[i].translate(-self.dx, -self.dy)
+        s = set(id(x) for x in self.objects)
+        for obj in gb.OBJECTS:
+            if id(obj) in s:
+                obj.translate(-self.dx, -self.dy)
 
 class GroupedEvent(Event):
 

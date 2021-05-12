@@ -49,11 +49,11 @@ def run_configuration(config_path):
             if len(gb.MODES) > 0:
                 gb.MODES[-1].event(ev)
 
-        if len(chalkboardlib.globals.MODES) > 0:
+        if len(events) > 0 and len(chalkboardlib.globals.MODES) > 0:
             gb.MODES[-1].tick()
+            if pygame.display.get_active():
+                pygame.display.flip()
 
-        if pygame.display.get_active():
-            pygame.display.flip()
         clock.tick(gb.CONFIG["fps-cap"])
 
     pygame.quit()

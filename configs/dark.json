@@ -1,13 +1,13 @@
 {
     "colors": {
 
-        "background": "#FFFFFF",
-        "cursor": "#000000",
+        "background": "#101010",
+        "cursor": "#FFFFFF",
         "highlight": "#FF0000",
 
-        "1": "#000000",
-        "2": "#3B60FF",
-        "3": "#DB2424",
+        "1": "#FFFFFF",
+        "2": "#55AADD",
+        "3": "#CB2424",
         "4": "#15922D",
         "5": "#0EC4B9",
         "6": "#8B35A0",
@@ -75,12 +75,12 @@
     // smooth out lines as they are drawn.
     // higher degree = more smoothing
     "smooth-lines": true,
-    "smooth-lines-degree": 3,
+    "smooth-lines-degree": 5,
 
     // compress lines as they are drawn (with RDP)
     // higher epsilon = more aggressive compression
     "compress-lines": true,
-    "compress-lines-epsilon": 0.12,
+    "compress-lines-epsilon": 0.08,
 
     // width in pixels when at default zoom level
     "default-line-thickness": 5,
@@ -113,7 +113,7 @@
     // this may not work on some systems, in which case you can set to
     // true and specify a file in font-path
     "custom-font": false,
-    "font-name": "consolas",
+    "font-name": "cambria",
     "font-path": "path/to/font.ttf",
 
     // if true, then when you click to create a new text object, mouse
@@ -122,9 +122,11 @@
     "freeze-text": false,
 
     // if true, text will be smooth-scaled when zooming in and out
+    // (known to cause some weird visual effect while in the middle of typing,
+    // but it looks completely fine afterwards.)
     "smooth-scale-text": false,
 
-    // only scale text shorter than threshold (int pixels)
+    // only scale text shorter than threshold (in pixels)
     "smooth-scale-text-threshold": 10000000,
 
     // show outlines of objects
