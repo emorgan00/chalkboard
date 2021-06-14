@@ -55,7 +55,8 @@ class InteractMode(Mode):
         super().load()
 
         # invisible cursor
-        pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
+        if gb.CONFIG["hide-cursor"]:
+            pygame.mouse.set_cursor((8,8),(0,0),(0,0,0,0,0,0,0,0),(0,0,0,0,0,0,0,0))
 
     def tick(self):
         super().tick()

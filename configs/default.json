@@ -133,5 +133,8 @@
     "debug-mode": false,
 
     // maximum frames per second
-    "fps-cap": 300
+    "fps-cap": 300,
+
+    // hide the cursor (since there are custom custors for individual modes)
+    "hide-cursor": true
 }
